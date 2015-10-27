@@ -16,7 +16,8 @@ third_party_core: path \
 									fastapprox	\
 									yaml-cpp \
 									eigen \
-									zeromq
+									zeromq \
+									protobuf3
 
 
 third_party_all: third_party_core \
@@ -38,6 +39,24 @@ path:
 	mkdir -p $(THIRD_PARTY_INCLUDE)
 	mkdir -p $(THIRD_PARTY_BIN)
 	mkdir -p $(THIRD_PARTY_SRC)
+
+
+# =================== protobuf3 ===================
+
+PROTOBUF3_SRC = $(THIRD_PARTY_CENTRAL)/protobuf-3.0.0-beta-1.tar.gz
+PROTOBUF3_LIB = $(THIRD_PARTY_LIB)/libprotobuf-lite.a
+
+protobuf3: path $(PROTOBUF3_LIB)
+
+$(PROTOBUF3_LIB): $(PROTOBUF3_SRC)
+	tar zxf $< -C $(THIRD_PARTY_SRC)
+	cd $(basename $(basename $(THIRD_PARTY_SRC)/$(notdir $<))); \
+	./autogen.sh ; \
+	./configure --prefix=$(THIRD_PARTY) && \
+	make -j4 && make check && make install; \
+	cd python; \
+	python setup.py build; \
+	cp -r build/lib/* $(THIRD_PARTY_INCLUDE)
 
 # ==================== boost ====================
 
@@ -232,7 +251,7 @@ zeromq: path $(ZMQ_LIB)
 $(ZMQ_LIB): $(ZMQ_SRC)
 	tar zxf $< -C $(THIRD_PARTY_SRC)
 	cd $(basename $(basename $(THIRD_PARTY_SRC)/$(notdir $<))); \
-	./configure --prefix=$(THIRD_PARTY); \
+	./configure --prefix=$(THIRD_PARTY) --without-libsodium; \
 	make install
 	cp $(THIRD_PARTY_CENTRAL)/zmq.hpp $(THIRD_PARTY_INCLUDE)
 
