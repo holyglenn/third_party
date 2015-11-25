@@ -17,11 +17,11 @@ third_party_core: path \
 									yaml-cpp \
 									eigen \
 									zeromq \
-									protobuf3 \ 
+									protobuf3 \
+									hotbox \
 									dmlc \
 									gtest \
-									rockdb 
-
+									rocksdb 
 
 third_party_all: third_party_core \
                   oprofile \
@@ -42,6 +42,19 @@ path:
 	mkdir -p $(THIRD_PARTY_INCLUDE)
 	mkdir -p $(THIRD_PARTY_BIN)
 	mkdir -p $(THIRD_PARTY_SRC)
+
+# ==================== hotbox ====================
+HOTBOX_SRC = $(THIRD_PARTY_CENTRAL)/hotbox.zip
+HOTBOX_LIB = $(THIRD_PARTY_LIB)/libhotbox.so
+
+hotbox: path glog $(HOTBOX_LIB)
+
+$(HOTBOX_LIB): $(HOTBOX_SRC)
+	rm -rf $(THIRD_PARTY_SRC)/hotbox
+	unzip $< -d $(THIRD_PARTY_SRC)
+	cd $(basename $(basename $(THIRD_PARTY_SRC))); \
+	cp -r hotbox/ $(THIRD_PARTY_INCLUDE)/; \
+	cp hotbox/*.so $(THIRD_PARTY_LIB)/
 
 # ==================== dmlc ====================
 
