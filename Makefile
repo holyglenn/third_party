@@ -122,9 +122,9 @@ PROTOBUF3_LIB = $(THIRD_PARTY_LIB)/libprotobuf-lite.a
 protobuf3: path $(PROTOBUF3_LIB)
 
 $(PROTOBUF3_LIB): $(PROTOBUF3_SRC)
-	tar zxf $< -C $(THIRD_PARTY_SRC)
+	#tar zxf $< -C $(THIRD_PARTY_SRC)
 	cd $(basename $(basename $(THIRD_PARTY_SRC)/$(notdir $<))); \
-	./autogen.sh ; \
+	./autogen.sh ;
 	./configure --prefix=$(THIRD_PARTY) && \
 	make -j4 && make check && make install; \
 	cd python; \
@@ -262,9 +262,9 @@ $(LIBCONFIG_LIB): $(LIBCONFIG_SRC)
 
 # ==================== yaml-cpp ===================
 
-YAMLCPP_SRC = $(THIRD_PARTY_CENTRAL)/yaml-cpp-0.5.1.tar.gz
+YAMLCPP_SRC = $(THIRD_PARTY_CENTRAL)/yaml-cpp-release-0.5.2.tar.gz
 YAMLCPP_MK = $(THIRD_PARTY_CENTRAL)/yaml-cpp.mk
-YAMLCPP_LIB = $(THIRD_PARTY_LIB)/libyaml-cpp.a
+YAMLCPP_LIB = $(THIRD_PARTY_LIB)/libyaml-cpp.so
 
 yaml-cpp: boost $(YAMLCPP_LIB)
 
